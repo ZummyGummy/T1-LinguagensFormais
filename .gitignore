@@ -1,0 +1,9 @@
+.vscode/
+.idea/
+__pycache__/
+.infra/
+venv/
+*.pyc
+*.png
+*.svg
+*.gv
