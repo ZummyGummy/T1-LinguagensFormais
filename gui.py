@@ -3,10 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from Finite_Automata import Finite_Automata
-from FA_Algorithms import *
-import copy
-import RE_Algorithms
+
 
 class gui():
 
@@ -247,10 +244,10 @@ class gui():
 			if regular_expression[0] == name:
 				self.current_re = regular_expression[1]
 				print('Regular Expression changed: ' + self.current_re)
-		new_fa = RE_Algorithms.de_simone(self.current_re)
-		new_fa.name = automata_name
-		self.FA_list.append(new_fa)
-		self.add_tab(new_fa.name, ['FA', new_fa.alphabet])
+		# new_fa = todo
+		# new_fa.name = automata_name
+		# self.FA_list.append(new_fa)
+		# self.add_tab(new_fa.name, ['FA', new_fa.alphabet])
 
 	def edit_expression_event(self):
 		new_expression, ok = QInputDialog.getText(self.main_window, 'Edit Expression', 'New Expression:')
@@ -277,7 +274,7 @@ class gui():
 						second_expression = regular_expression[1]
 						break
 				if found:
-					result = equivalence(RE_Algorithms.de_simone(self.current_re), RE_Algorithms.de_simone(second_expression))
+					# result = equivalence(RE_Algorithms.de_simone(self.current_re), RE_Algorithms.de_simone(second_expression))
 					if result:
 						end = QMessageBox.question(self.main_window, 'Equal', 'The second expression is equal the first one', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 					else:
@@ -431,55 +428,55 @@ class gui():
 					if again == QMessageBox.No:
 						break
 
-	def intersect_(self, automata1, automata2):
-		print("------Intersection------")
-		print("Automata1: " + automata1.name)
-		print('initial state: ' + automata1.initials)
-		print('States:')
-		print(automata1.states)
-		print('Finals:')
-		print(automata1.finals)
-		print('Transitions: ')
-		print(automata1.transitions)
-		print('Alphabet: ')
-		print(automata1.alphabet)
-
-		print()
-		print("Automata1: " + automata2.name)
-		print('initial state: ' + automata2.initials)
-		print('States:')
-		print(automata2.states)
-		print('Finals:')
-		print(automata2.finals)
-		print('Transitions: ')
-		print(automata2.transitions)
-		print('Alphabet: ')
-		print(automata2.alphabet)
-		new_fa = intersection(automata1, automata2)
-		print('intersection done')
-		new_fa.name = automata1.name + ' v ' + automata2.name
-		print('name of new automata: ' + new_fa.name)
-		new_fa.calculate_alphabet()
-
-		self.FA_list.append(new_fa)
-
-		print()
-		print("Automata2: " + new_fa.name)
-		print('initial state: ' + new_fa.initials)
-		print('States:')
-		print(new_fa.states)
-		print('Finals:')
-		print(new_fa.finals)
-		print('Transitions: ')
-		print(new_fa.transitions)
-		print('Alphabet: ')
-		print(new_fa.alphabet)
-		self.add_tab(new_fa.name, ['FA', new_fa.alphabet])
+	# def intersect_(self, automata1, automata2):
+	# 	print("------Intersection------")
+	# 	print("Automata1: " + automata1.name)
+	# 	print('initial state: ' + automata1.initials)
+	# 	print('States:')
+	# 	print(automata1.states)
+	# 	print('Finals:')
+	# 	print(automata1.finals)
+	# 	print('Transitions: ')
+	# 	print(automata1.transitions)
+	# 	print('Alphabet: ')
+	# 	print(automata1.alphabet)
+    #
+	# 	print()
+	# 	print("Automata1: " + automata2.name)
+	# 	print('initial state: ' + automata2.initials)
+	# 	print('States:')
+	# 	print(automata2.states)
+	# 	print('Finals:')
+	# 	print(automata2.finals)
+	# 	print('Transitions: ')
+	# 	print(automata2.transitions)
+	# 	print('Alphabet: ')
+	# 	print(automata2.alphabet)
+	# 	new_fa = intersection(automata1, automata2)
+	# 	print('intersection done')
+	# 	new_fa.name = automata1.name + ' v ' + automata2.name
+	# 	print('name of new automata: ' + new_fa.name)
+	# 	new_fa.calculate_alphabet()
+    #
+	# 	self.FA_list.append(new_fa)
+    #
+	# 	print()
+	# 	print("Automata2: " + new_fa.name)
+	# 	print('initial state: ' + new_fa.initials)
+	# 	print('States:')
+	# 	print(new_fa.states)
+	# 	print('Finals:')
+	# 	print(new_fa.finals)
+	# 	print('Transitions: ')
+	# 	print(new_fa.transitions)
+	# 	print('Alphabet: ')
+	# 	print(new_fa.alphabet)
+	# 	self.add_tab(new_fa.name, ['FA', new_fa.alphabet])
 
 	def complement_event(self):
-		temp_fa = complement(self.current_fa)
-		self.FA_list[self.FA_list.index(self.current_fa)] = temp_fa
-		self.current_fa = temp_fa
+		# temp_fa = complement(self.current_fa)
+		# self.FA_list[self.FA_list.index(self.current_fa)] = temp_fa
+		# self.current_fa = temp_fa
 		self.update_table()
 
 	def diff_event(self):
@@ -544,7 +541,7 @@ class gui():
 		self.add_tab(new_fa.name, ['FA', new_fa.alphabet])
 
 	def minimize_event(self):
-		minimize(self.current_fa)
+		# minimize(self.current_fa)
 		self.update_table()
 		'''new_fa = copy.copy(self.current_fa)
 		minimize(new_fa)
@@ -554,7 +551,7 @@ class gui():
 		self.add_tab(new_fa.name, ['FA', new_fa.alphabet])aa'''
 
 	def determinize_event(self):
-		determinize(self.current_fa)
+		# determinize(self.current_fa)
 		self.update_table()
 		'''new_fa = copy.copy(self.current_fa)
 		determinize(new_fa)
@@ -570,7 +567,7 @@ class gui():
 			self.create_fa(self.expression, alphabet)
 
 	def create_fa(self, expression, alphabet):
-		new_FA = Finite_Automata()
+		# new_FA = Finite_Automata()
 		new_FA.set_name(str(expression))
 		self.FA_list.append(new_FA)
 		self.add_tab(expression, ['FA', alphabet])
