@@ -5,12 +5,15 @@ import os
 from itertools import filterfalse
 
 
-@dataclass
-class NFA:
-    initial: str
-    states: FrozenSet[str]
-    finals: FrozenSet[str]
-    transitions: Dict[str, Dict[str, FrozenSet[str]]]
+class NFA(object):
+
+    def __init__(self):
+        self.name = ""
+        self.initial = ""
+        self.alphabet = []
+        self.states = []
+        self.finals = []
+        self.transitions = {}
 
     def epsilon_closure(self, state: str)->Set[str]:
         if state not in self.states:
@@ -24,9 +27,18 @@ class NFA:
                                        self.transitions.get(current, {}).get('', frozenset())))
         return closure
 
+    def alphabet(self) -> Set[str]:
+        syms = set()
+        for trans in self.transitions.values():
+            syms |= set(trans.keys())
+        return syms
+
     def determinize(self):
         initial = frozenset(self.epsilon_closure(self.initial))
 
         pass
+
+    def set_name(self, name):
+        self.name = name;
 
 

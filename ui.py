@@ -10,9 +10,10 @@ from automata.nfa import NFA
 class gui():
 
 	def __init__(self):
-		# super().__init__()
+		super().__init__()
 		self.FA_list = []
 		self.RE_list = []
+		self.RL_list = []
 		self.current_fa = None
 		self.current_re = ''
 		self.initUI()
@@ -44,7 +45,7 @@ class gui():
 		self.new_regular = QAction(QIcon('new.png'), '&New RL', self.main_window)
 		self.new_regular.setShortcut('Ctrl+N')
 		self.new_regular.setStatusTip('Create new Regular Language')
-		self.new_regular.triggered.connect(self.new_fa)
+		self.new_regular.triggered.connect(self.new_rl)
 		self.file_menu.addAction(self.new_regular)
 
 		# menu bar Automata
@@ -570,7 +571,13 @@ class gui():
 		if ok:
 			alphabet, ok = QInputDialog.getText(self.main_window, 'Entre com a expressão regular',
 												'Enter the alphabet of ' + self.expression + '. (Example: abc)')
-			self.create_fa(self.expression, alphabet)
+			self.create_rl(self.expression, alphabet)
+
+	def create_rl(self, expression, alphabet):
+		# new_FA = DFA()
+		# new_FA.set_name(str(expression))
+		# self.FA_list.append(new_FA)
+		self.add_tab(expression, ['RL', alphabet])
 
 	def new_fa(self):
 		self.expression, ok = QInputDialog.getText(self.main_window, 'FA Input', 'Enter the name of the Finite Automata: ')
@@ -579,9 +586,9 @@ class gui():
 			self.create_fa(self.expression, alphabet)
 
 	def create_fa(self, expression, alphabet):
-		new_FA = DFA()
-		new_FA.set_name(str(expression))
-		self.FA_list.append(new_FA)
+		automata = DFA()
+		automata.set_name(str(expression))
+		self.FA_list.append(automata)
 		self.add_tab(expression, ['FA', alphabet])
 
 	def new_re(self):
@@ -592,8 +599,8 @@ class gui():
 			self.create_re_(name, regular_expression)
 
 	def create_re_(self, name, expression):
-		self.RE_list.append([name, expression])
-		self.current_re = expression
+		# self.RE_list.append([name, expression])
+		# self.current_re = expression
 		self.add_tab(name, ['RE', expression])
 
 	def cell_changed_event(self, row, column):
@@ -686,11 +693,17 @@ class gui():
 				self.update_table()
 
 			# RE
-			elif current_tab.type == 'RE':
+			if current_tab.type == 'RE':
 				self.allow_RE(True)
 				for regular_expression in self.RE_list:
 					if regular_expression[0] == current_tab.name:
 						self.current_re = regular_expression[1]
+						break
+
+			elif current_tab.type == 'RL':
+				for regular_language in self.RL_list:
+					if regular_language[0] == current_tab.name:
+						self.current_rl = regular_language[1]
 						break
 
 
