@@ -4,7 +4,10 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from automata.dfa import DFA
+from regexp.parser import RegexParser, RegexNode
+from regexp.automaton import RegexToDFA
 from automata.nfa import NFA
+from regexp.test import *
 
 
 class gui():
@@ -17,6 +20,7 @@ class gui():
 		self.current_fa = None
 		self.current_re = ''
 		self.initUI()
+		# self.window()
 
 	def initUI(self):
 
@@ -43,22 +47,22 @@ class gui():
 
 		# menu bar Regular Language
 		self.new_regular = QAction(QIcon('new.png'), '&New RL', self.main_window)
-		self.new_regular.setShortcut('Ctrl+N')
-		self.new_regular.setStatusTip('Create new Regular Language')
+		self.new_regular.setShortcut('Ctrl+E')
+		self.new_regular.setStatusTip('Criar nova linguagem regular')
 		self.new_regular.triggered.connect(self.new_rl)
 		self.file_menu.addAction(self.new_regular)
 
 		# menu bar Automata
 		self.new_automata = QAction(QIcon('new.png'), '&New FA', self.main_window)
 		self.new_automata.setShortcut('Ctrl+N')
-		self.new_automata.setStatusTip('Create new Finite Automata')
+		self.new_automata.setStatusTip('Create novo autômato finito')
 		self.new_automata.triggered.connect(self.new_fa)
 		self.file_menu.addAction(self.new_automata)
 
 		# menu bar Regular Expression
 		self.new_expression = QAction(QIcon('new.png'), '&New RE', self.main_window)
 		self.new_expression.setShortcut('Ctrl+Shift+N')
-		self.new_expression.setStatusTip('Create new regular expression')
+		self.new_expression.setStatusTip('Create nova expressão regular')
 		self.new_expression.triggered.connect(self.new_re)
 		self.file_menu.addAction(self.new_expression)
 
@@ -236,23 +240,26 @@ class gui():
 			self.close.setEnabled(False)
 
 	def generate_automata_event(self):
-		state_name, ok = QInputDialog.getText(self.main_window, 'Generate Automata', 'Name the created automata:')
+		state_name, ok = QInputDialog.getText(self.main_window, 'Gerar Autômato', 'Dê um nome ao nomo autômato:')
 		if ok:
 			self.generate_automata_(state_name)
 
 	def generate_automata_(self, automata_name):
 		current_tab = self.tabs.currentWidget()
 		name = current_tab.name
-		print('Tab name: ' + name)
-		print('Current Regular Expression: ' + self.current_re)
+		print('Nome da Tab: ' + name)
+		print('Expressão Regular atual: ' + self.current_re)
 		for regular_expression in self.RE_list:
 			if regular_expression[0] == name:
 				self.current_re = regular_expression[1]
 				print('Regular Expression changed: ' + self.current_re)
-		# new_fa = todo
-		# new_fa.name = automata_name
-		# self.FA_list.append(new_fa)
-		# self.add_tab(new_fa.name, ['FA', new_fa.alphabet])
+
+		tree = to_ast(self.current_re)
+		converter = RegexToDFA()
+		dfa = converter.convert(tree)
+
+		self.FA_list.append(dfa)
+		self.add_tab(dfa.name, ['FA', dfa.alphabet])
 
 	def edit_expression_event(self):
 		new_expression, ok = QInputDialog.getText(self.main_window, 'Edit Expression', 'New Expression:')
@@ -568,9 +575,13 @@ class gui():
 
 	def new_rl(self):
 		self.expression, ok = QInputDialog.getText(self.main_window, 'FA Input', 'Enter the name of the Regular Language: ')
+
+		if ok:
+			language, ok = QInputDialog.Te
 		if ok:
 			alphabet, ok = QInputDialog.getText(self.main_window, 'Entre com a expressão regular',
 												'Enter the alphabet of ' + self.expression + '. (Example: abc)')
+
 			self.create_rl(self.expression, alphabet)
 
 	def create_rl(self, expression, alphabet):
@@ -599,8 +610,8 @@ class gui():
 			self.create_re_(name, regular_expression)
 
 	def create_re_(self, name, expression):
-		# self.RE_list.append([name, expression])
-		# self.current_re = expression
+		self.RE_list.append([name, expression])
+		self.current_re = expression
 		self.add_tab(name, ['RE', expression])
 
 	def cell_changed_event(self, row, column):
@@ -705,6 +716,46 @@ class gui():
 					if regular_language[0] == current_tab.name:
 						self.current_rl = regular_language[1]
 						break
+
+	def window(self):
+		app = QApplication(sys.argv)
+		w = QWidget()
+		w.setWindowTitle("Insira uma Linguagem Regular")
+		w.resize(400, 400)
+
+		textbox = QPlainTextEdit(w)
+		textbox.resize(380, 300)
+		textbox.move(10, 10)
+
+		button = QPushButton("Ok", w)
+		button.move(160, 320)
+
+		button
+
+		w.show()
+
+		sys.exit(app.exec_())
+
+# class InputText(QWindow):
+#
+# 	def __init__(self):
+# 		self.app = QApplication(sys.argv)
+# 		w = QWidget()
+# 		w.setWindowTitle("Insira uma Linguagem Regular")
+# 		w.resize(400, 400)
+#
+# 		textbox = QPlainTextEdit(w)
+# 		textbox.resize(380, 300)
+# 		textbox.move(10, 10)
+#
+# 		button = QPushButton("Ok", w)
+# 		button.move(160, 320)
+#
+# 		button.conn
+#
+# 		w.show()
+#
+# 		sys.exit(app.exec_())
 
 
 class Tab(QWidget):

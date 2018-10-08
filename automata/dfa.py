@@ -10,7 +10,7 @@ class DFA(object):
     def __init__(self):
         self.name = ""
         self.initials = ""
-        self.alphabet = []
+        self.alphabet = set()
         self.states = []
         self.finals = []
         self.transitions = {}
@@ -181,3 +181,14 @@ class DFA(object):
             name = self.equi_name(name_state)
             if name not in self.finals:
                 self.finals.append(name)
+
+    def delete_all_transitions(self, name_state, key):
+        if name_state not in self.transitions.keys():
+            print("state not found")
+            return
+        state_keys = list(self.transitions[name_state])
+        if key not in state_keys:
+            print("key not found")
+            return
+        del self.transitions[name_state][key]
+        self.calculate_alphabet()
